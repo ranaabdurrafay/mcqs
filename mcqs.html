@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz App</title>
+
+  <style>
+    /* CSS styles */
+  </style>
+</head>
+<body>
+  <div class="quiz-container" id="quiz">
+    <div class="quiz-header">
+      <h2 id="question">Question text</h2>
+      <ul>
+        <li>
+          <input type="radio" name="answer" id="a" class="answer">
+          <label for="a" id="a_text">Question</label>
+        </li>
+        <!-- Repeat the above <li> structure for each answer choice -->
+      </ul>
+    </div>
+    <button id="submit">Submit</button>
+  </div>
+
+  <script>
+    // Quiz data containing questions, answer choices, and correct answers
+    const quizData = [
+      {
+        question: "Which language runs in a web browser?",
+        a: "Java",
+        b: "C",
+        c: "Python",
+        d: "JavaScript",
+        correct: "d",
+      },
+      // Add more question objects following the same structure
+    ];
+
+    // Variables referencing HTML elements
+    const quizContainer = document.getElementById("quiz");
+    const answerElements = document.querySelectorAll(".answer"); // Radio buttons
+    const questionElement = document.getElementById("question");
+    const aTextElement = document.getElementById("a_text");
+    const bTextElement = document.getElementById("b_text");
+    const cTextElement = document.getElementById("c_text");
+    const dTextElement = document.getElementById("d_text");
+    const submitButton = document.getElementById("submit");
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    // Load the quiz by setting question and answer texts
+    loadQuiz();
+
+    function loadQuiz() {
+      clearSelectedAnswers();
+
+      const currentQuestionData = quizData[currentQuestionIndex];
+
+      questionElement.innerText = currentQuestionData.question;
+      aTextElement.innerText = currentQuestionData.a;
+      bTextElement.innerText = currentQuestionData.b;
+      cTextElement.innerText = currentQuestionData.c;
+      dTextElement.innerText = currentQuestionData.d;
+    }
+
+    function clearSelectedAnswers() {
+      answerElements.forEach((answerElement) => (answerElement.checked = false));
+    }
+
+    function getSelectedAnswer() {
+      let selectedAnswer;
+
+      answerElements.forEach((answerElement) => {
+        if (answerElement.checked) {
+          selectedAnswer = answerElement.id;
+        }
+      });
+
+      return selectedAnswer;
+    }
+
+    submitButton.addEventListener("click", () => {
+      const selectedAnswer = getSelectedAnswer();
+
+      if (selectedAnswer) {
+        if (selectedAnswer === quizData[currentQuestionIndex].correct) {
+          score++;
+        }
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizData.length) {
+          loadQuiz();
+        } else {
+          quizContainer.innerHTML = `<h2>You answered ${score}/${quizData.length} questions correctly</h2>
+            <button onclick="location.reload()">Reload</button>`;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
